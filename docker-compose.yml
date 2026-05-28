@@ -1,0 +1,58 @@
+version: '3.9'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: performance_app
+    ports:
+      - "8000:80"
+    volumes:
+      - ./:/var/www/html
+    environment:
+      - APP_ENV=production
+      - DB_HOST=mysql
+      - DB_USER=performance_user
+      - DB_PASS=performance_password
+      - DB_NAME=performance_db
+    depends_on:
+      - mysql
+    networks:
+      - performance_network
+
+  mysql:
+    image: mysql:8.0
+    container_name: performance_mysql
+    environment:
+      - MYSQL_DATABASE=performance_db
+      - MYSQL_USER=performance_user
+      - MYSQL_PASSWORD=performance_password
+      - MYSQL_ROOT_PASSWORD=root_password
+    volumes:
+      - mysql_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    networks:
+      - performance_network
+
+  phpmyadmin:
+    image: phpmyadmin
+    container_name: performance_phpmyadmin
+    environment:
+      - PMA_HOST=mysql
+      - PMA_USER=root
+      - PMA_PASSWORD=root_password
+    ports:
+      - "8081:80"
+    depends_on:
+      - mysql
+    networks:
+      - performance_network
+
+volumes:
+  mysql_data:
+
+networks:
+  performance_network:
+    driver: bridge
