@@ -1,71 +1,108 @@
-# Employee Performance Evaluation System
+# Employee Performance Evaluation System - PHP Version
 
 A comprehensive, production-ready system for managing employee performance evaluations combining supervisor assessments and anonymous peer reviews with automated scoring and analytics.
 
 ## 📋 Project Overview
 
-This system is designed for healthcare organizations and other enterprises requiring robust 360-degree performance evaluation processes. It integrates Google Forms for data collection and Google Sheets for automated calculations and reporting.
+This system is designed for healthcare organizations and other enterprises requiring robust 360-degree performance evaluation processes. It integrates Google Forms for data collection and Google Sheets for automated calculations, with a PHP backend for advanced analytics and reporting.
 
 ## 🏗️ System Architecture
 
 ```
 real/
-├── docs/
-│   ├── IMPLEMENTATION_GUIDE.md
-│   ├── GOOGLE_FORMS_SETUP.md
-│   ├── SHEETS_FORMULAS.md
-│   └── BEST_PRACTICES.md
-├── scripts/
-│   ├── google-apps-script/
-│   │   ├── supervisor-form.gs
-│   │   ├── peer-review-form.gs
-│   │   ├── automation.gs
-│   │   └── email-alerts.gs
-│   ├── python/
-│   │   ├── sheets_sync.py
-│   │   ├── analytics.py
-│   │   └── reporting.py
-│   └── sql/
-│       ├── schema.sql
-│       └── migrations/
-├── backend/
-│   ├── models/
-│   │   ├── employee.py
-│   │   ├── supervisor_review.py
-│   │   ├── peer_review.py
-│   │   └── evaluation_score.py
-│   ├── controllers/
-│   │   ├── evaluation_controller.py
-│   │   ├── reporting_controller.py
-│   │   └── user_controller.py
-│   ├── services/
-│   │   ├── calculation_service.py
-│   │   ├── notification_service.py
-│   │   ├── sheets_integration_service.py
-│   │   └── pdf_export_service.py
-│   └── app.py
-├── frontend/
-│   ├── dashboard/
-│   │   ├── index.html
-│   │   ├── css/
-│   │   └── js/
-│   ├── reports/
-│   │   ├── individual_report.html
-│   │   └── department_report.html
-│   └── admin/
-│       ├── form_management.html
-│       └── user_management.html
-├── config/
-│   ├── settings.py
-│   ├── constants.py
-│   └── credentials.template.json
+├── public/
+│   ├── index.php
+│   ├── css/
+│   │   ├── bootstrap.min.css
+│   │   └── style.css
+│   ├── js/
+│   │   ├── bootstrap.bundle.min.js
+│   │   └── app.js
+│   └── .htaccess
+├── src/
+│   ├── Config/
+│   │   ├── Database.php
+│   │   ├── Settings.php
+│   │   └── Constants.php
+│   ├── Controllers/
+│   │   ├── AuthController.php
+│   │   ├── EvaluationController.php
+│   │   ├── ReportController.php
+│   │   ├── PeerReviewController.php
+│   │   └── AdminController.php
+│   ├── Models/
+│   │   ├── User.php
+│   │   ├── Employee.php
+│   │   ├── Evaluation.php
+│   │   ├── PeerReview.php
+│   │   └── EvaluationScore.php
+│   ├── Services/
+│   │   ├── CalculationService.php
+│   │   ├── NotificationService.php
+│   │   ├── SheetsIntegrationService.php
+│   │   ├── ReportService.php
+│   │   ├── PDFExportService.php
+│   │   └── ValidationService.php
+│   ├── Middleware/
+│   │   ├── Auth.php
+│   │   ├── RoleCheck.php
+│   │   └── RateLimiter.php
+│   ├── Utilities/
+│   │   ├── Logger.php
+│   │   ├── EmailHelper.php
+│   │   ├── DateHelper.php
+│   │   └── Validator.php
+│   └── Views/
+│       ├── layout/
+│       │   ├── header.php
+│       │   ├── sidebar.php
+│       │   └── footer.php
+│       ├── auth/
+│       │   ├── login.php
+│       │   └── register.php
+│       ├── dashboard/
+│       │   ├── index.php
+│       │   ├── my-evaluations.php
+│       │   └── peer-reviews.php
+│       ├── evaluation/
+│       │   ├── form.php
+│       │   ├── list.php
+│       │   └── detail.php
+│       ├── reports/
+│       │   ├── individual.php
+│       │   ├── department.php
+│       │   └── analytics.php
+│       └── admin/
+│           ├── users.php
+│           ├── periods.php
+│           └── settings.php
+├── database/
+│   ├── migrations/
+│   │   ├── 001_create_users_table.php
+│   │   ├── 002_create_employees_table.php
+│   │   ├── 003_create_evaluations_table.php
+│   │   ├── 004_create_peer_reviews_table.php
+│   │   ├── 005_create_evaluation_scores_table.php
+│   │   └── 006_create_audit_log_table.php
+│   └── seeds/
+│       ├── UsersSeeder.php
+│       └── EmployeesSeeder.php
 ├── tests/
-│   ├── test_calculations.py
-│   ├── test_sheets_integration.py
-│   └── test_reporting.py
-├── requirements.txt
+│   ├── Unit/
+│   │   ├── CalculationServiceTest.php
+│   │   ├── ValidationServiceTest.php
+│   │   └── NotificationServiceTest.php
+│   └── Feature/
+│       ├── EvaluationFeatureTest.php
+│       └── AuthFeatureTest.php
 ├── .env.example
-└── docker-compose.yml
+├── .env.docker
+├── .htaccess
+├── composer.json
+├── docker-compose.yml
+├── Dockerfile
+├── .gitignore
+└── README.md
 ```
 
 ## 🎯 Key Features
@@ -74,7 +111,7 @@ real/
 - **Supervisor Evaluations**: Structured scoring across 5 categories
 - **Anonymous Peer Reviews**: Multiple peer assessments (minimum 4 required)
 - **Automated Calculations**: Real-time scoring and weighting (40% supervisor, 60% peer)
-- **Performance Ratings**: Automatic classification (Outstanding, Very Good, Good, Fair, Needs Improvement)
+- **Performance Ratings**: Automatic classification
 - **Anonymity Controls**: Hidden tracking for HR oversight
 - **Email Notifications**: Automated alerts for completion and flagged performers
 
@@ -85,10 +122,10 @@ real/
 - **PDF Export**: Professional evaluation reports
 - **Dashboard Analytics**: Visual performance insights
 - **Compliance Logging**: Full audit trail for fairness verification
+- **Role-Based Access**: Admin, HR, Supervisor, Employee, Viewer roles
 
 ## 📊 Scoring System
 
-### Calculation Formula
 ```
 Supervisor Total = Performance (0-30) + Patient Care (0-20) + Teamwork (0-20) 
                  + Reliability (0-15) + Initiative & Compliance (0-15)
@@ -99,10 +136,10 @@ Peer Average = Average of all peer review totals
 Peer Weighted = Peer Average × 0.60
 
 Final Score = Supervisor Weighted + Peer Weighted
-Performance Rating = IF(score >= 90, "Outstanding", 
-                       IF(score >= 80, "Very Good",
-                       IF(score >= 70, "Good",
-                       IF(score >= 60, "Fair", "Needs Improvement"))))
+Rating = IF(score >= 90, "Outstanding", 
+           IF(score >= 80, "Very Good",
+           IF(score >= 70, "Good",
+           IF(score >= 60, "Fair", "Needs Improvement"))))
 ```
 
 ### Rating Scale
@@ -115,109 +152,99 @@ Performance Rating = IF(score >= 90, "Outstanding",
 ## 🔧 Setup Instructions
 
 ### Prerequisites
-- Google Account with Forms & Sheets access
-- Python 3.8+
+- PHP 8.0+
+- MySQL 5.7+ or PostgreSQL 12+
+- Composer
 - Docker (optional)
 - Git
 
 ### Quick Start
 
-1. **Clone Repository**
-   ```bash
-   git clone https://github.com/hessy6703/real.git
-   cd real
-   ```
+#### 1. Clone Repository
+```bash
+git clone https://github.com/hessy6703/real.git
+cd real
+```
 
-2. **Configure Environment**
-   ```bash
-   cp .env.example .env
-   # Edit .env with your Google Sheets API credentials
-   ```
+#### 2. Configure Environment
+```bash
+cp .env.example .env
+# Edit .env with your settings
+```
 
-3. **Set Up Google Forms**
-   - Follow `docs/GOOGLE_FORMS_SETUP.md`
-   - Create Supervisor Evaluation Form
-   - Create Peer Review Form
-   - Link both to Google Sheets
+#### 3. Install Dependencies
+```bash
+composer install
+```
 
-4. **Deploy Automation Scripts**
-   - Copy Google Apps Script code from `scripts/google-apps-script/`
-   - Add to Google Sheets triggers
+#### 4. Database Setup
+```bash
+php run-migrations.php
+php seed-database.php
+```
 
-5. **Install Python Dependencies**
-   ```bash
-   pip install -r requirements.txt
-   ```
+#### 5. Google Sheets Integration
+- Follow `docs/GOOGLE_FORMS_SETUP.md`
+- Create Supervisor and Peer Review forms
+- Link to Google Sheets
+- Add credentials to `.env`
 
-6. **Initialize Database**
-   ```bash
-   python backend/app.py --init-db
-   ```
+#### 6. Start Development Server
+```bash
+php -S localhost:8000 -t public
+# Access at http://localhost:8000
+```
 
-7. **Start Backend Server**
-   ```bash
-   python backend/app.py
-   # Server runs on http://localhost:5000
-   ```
+### Docker Setup
+```bash
+docker-compose up --build
+# Access at http://localhost:80
+```
 
 ## 📋 Configuration Checklist
 
-### Google Forms Configuration
+### Database Configuration
+- [ ] MySQL/PostgreSQL database created
+- [ ] Database credentials in `.env`
+- [ ] Migrations executed
+- [ ] Seeds loaded
+- [ ] Tables verified
 
-**Form 1: Supervisor Evaluation**
-- [ ] Employee ID field (Short answer)
-- [ ] Employee Full Name field (Short answer)
-- [ ] Department field (Dropdown)
-- [ ] Job Title field (Short answer)
-- [ ] Evaluation Period field (Short answer)
-- [ ] 5 scoring categories with validation (0-100)
-- [ ] Supervisor overall assessment sections
-- [ ] Supervisor name & signature
-- [ ] Link to "Supervisor Responses" Sheet
+### Google Integration
+- [ ] Google Cloud Project created
+- [ ] Google Sheets API enabled
+- [ ] Service account credentials downloaded
+- [ ] Credentials file placed in project
+- [ ] Google Forms created and linked to Sheets
 
-**Form 2: Peer Review (Anonymous)**
-- [ ] Email collection DISABLED
-- [ ] Sign-in NOT required
-- [ ] Multiple responses ENABLED
-- [ ] Employee ID field (Short answer)
-- [ ] Employee Name field (Dropdown)
-- [ ] Department field (Dropdown)
-- [ ] 5 scoring categories with validation (0-100)
-- [ ] Optional peer comments section
-- [ ] Link to "Peer Responses" Sheet
-
-### Google Sheets Setup
-
-**Supervisor Responses Sheet**
-- [ ] Columns: Employee ID, Name, Department, Job Title, Period
-- [ ] Scoring columns: Performance, Patient Care, Teamwork, Reliability, Initiative
-- [ ] Calculation columns: Total, Weighted (40%)
-- [ ] Comments columns
-
-**Peer Responses Sheet**
-- [ ] Columns: Timestamp, Employee ID, Name, Department
-- [ ] Scoring columns: Performance, Patient Care, Teamwork, Reliability, Initiative
-- [ ] Comments columns
-- [ ] Calculation: Average score per employee
-
-**Summary Sheet**
-- [ ] Employee list with totals
-- [ ] Supervisor Weighted (40%)
-- [ ] Peer Weighted (60%)
-- [ ] Final Score
-- [ ] Rating Classification
-- [ ] Department Summary
+### Application Configuration
+- [ ] `.env` file configured
+- [ ] App URL set
+- [ ] Email credentials configured
+- [ ] SMTP settings verified
+- [ ] Timezone set
+- [ ] Logging configured
 
 ## 🚀 Deployment
 
 ### Local Development
 ```bash
+composer install
+php -S localhost:8000 -t public
+```
+
+### Docker Deployment
+```bash
 docker-compose up --build
 ```
 
 ### Production Deployment
-- See `docs/IMPLEMENTATION_GUIDE.md` for cloud deployment options
-- Recommended: Google Cloud Run + Cloud SQL
+See `docs/DEPLOYMENT.md` for:
+- Apache/Nginx configuration
+- SSL/HTTPS setup
+- Database optimization
+- Performance tuning
+- Monitoring setup
 
 ## 📚 Documentation
 
@@ -225,6 +252,9 @@ docker-compose up --build
 - **[Google Forms Setup](docs/GOOGLE_FORMS_SETUP.md)** - Form configuration steps
 - **[Sheets Formulas](docs/SHEETS_FORMULAS.md)** - All automation formulas
 - **[Best Practices](docs/BEST_PRACTICES.md)** - Fairness & compliance guidelines
+- **[API Documentation](docs/API.md)** - REST API endpoints
+- **[Database Schema](docs/DATABASE.md)** - Table structure and relationships
+- **[Deployment Guide](docs/DEPLOYMENT.md)** - Production setup
 
 ## 🔐 Security & Compliance
 
@@ -232,9 +262,14 @@ docker-compose up --build
 - ✅ Minimum 4 peer reviewers per employee
 - ✅ No self-review functionality
 - ✅ Complete audit trail logging
-- ✅ Role-based access control (HR, Supervisor, Employee)
+- ✅ Role-based access control (RBAC)
 - ✅ GDPR-compliant data handling
 - ✅ Encrypted credential storage
+- ✅ SQL injection prevention
+- ✅ XSS protection
+- ✅ CSRF token validation
+- ✅ Password hashing with bcrypt
+- ✅ Session security
 
 ## 🔄 Workflow
 
@@ -244,13 +279,13 @@ docker-compose up --build
    - Send notification emails
 
 2. **Supervisors Complete Evaluations**
-   - Fill Supervisor Evaluation Form
+   - Fill evaluation form in system
    - Submit scores and comments
    - System notifies HR of completion
 
 3. **Peers Provide Reviews**
    - Receive anonymous peer review link
-   - Complete Peer Review Form (4+ required)
+   - Complete review form
    - Anonymity maintained throughout
 
 4. **System Calculates Scores**
@@ -262,23 +297,50 @@ docker-compose up --build
    - Individual evaluation reports
    - Department performance summaries
    - Trends and comparisons
-   - Flagged performers notification to HR
 
 6. **Follow-up Actions**
    - HR reviews flagged performers
    - Coaching/improvement plans assigned
    - Quarterly tracking
 
-## 📊 Advanced Features (Future Roadmap)
+## 📊 API Endpoints
 
-- [ ] Looker Studio Dashboard Integration
-- [ ] Department performance ranking
-- [ ] Individual trend tracking
-- [ ] Monthly/quarterly automated reports
-- [ ] Machine learning for performance prediction
-- [ ] Integration with HR management systems
-- [ ] Mobile app for evaluators
-- [ ] Real-time notifications and reminders
+See [API.md](docs/API.md) for complete endpoint documentation.
+
+### Authentication
+- `POST /api/auth/login` - User login
+- `POST /api/auth/logout` - User logout
+- `POST /api/auth/register` - User registration
+
+### Evaluations
+- `GET /api/evaluations` - List evaluations
+- `POST /api/evaluations` - Create evaluation
+- `GET /api/evaluations/{id}` - Get evaluation
+- `PUT /api/evaluations/{id}` - Update evaluation
+
+### Peer Reviews
+- `GET /api/peer-reviews` - List peer reviews
+- `POST /api/peer-reviews` - Submit peer review
+- `GET /api/peer-reviews/{id}` - Get peer review
+
+### Reports
+- `GET /api/reports/individual/{employee_id}` - Individual report
+- `GET /api/reports/department/{department}` - Department report
+- `GET /api/reports/analytics` - Analytics data
+- `POST /api/reports/export/pdf` - Export as PDF
+
+## 🧪 Testing
+
+```bash
+# Run all tests
+vendor/bin/phpunit
+
+# Run specific test file
+vendor/bin/phpunit tests/Unit/CalculationServiceTest.php
+
+# Run with coverage
+vendor/bin/phpunit --coverage-html=coverage
+```
 
 ## 🤝 Contributing
 
@@ -290,10 +352,15 @@ This project is proprietary and confidential.
 
 ## 📞 Support
 
-For issues or questions, contact the HR Technology team.
+For issues or questions:
+1. Check documentation in `/docs` directory
+2. Review error logs in `/storage/logs` directory
+3. Check GitHub Issues
+4. Contact the development team
 
 ---
 
 **Last Updated**: May 28, 2026  
 **Version**: 1.0.0  
-**Status**: Production Ready
+**Status**: Production Ready  
+**Language**: PHP 8.0+
